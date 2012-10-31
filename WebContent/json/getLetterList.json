@@ -1,0 +1,34 @@
+{
+	"MOIM_LETTER" : [
+					{
+						"let_id" : "A",
+						"let_title" : "e",
+						"let_content":1,
+						"let_check" : "A",
+						"let_date" : "20120202",
+						"let_toMem":1,
+						"let_fromMem" : 3,
+						"let_title" : 5
+					},
+						{
+						"let_id" : "A",
+						"let_title" : "e",
+						"let_content":1,
+						"let_check" : "A",
+						"let_date" : "20120202",
+						"let_toMem":1,
+						"let_fromMem" : 3,
+						"let_title" : 5
+					},	{
+						"let_id" : "A",
+						"let_title" : "e",
+						"let_content":1,
+						"let_check" : "A",
+						"let_date" : "20120202",
+						"let_toMem":1,
+						"let_fromMem" : 3,
+						"let_title" : 5
+					}
+
+				]
+}

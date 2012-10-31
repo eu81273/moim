@@ -1,0 +1,32 @@
+<div>
+	<div class="moimSubTitleContainer">
+		<img src="asset/moim_board.png" width="48" height="48"><span class="moimSubTitle"> 모임 게시판</span>
+	</div>
+	<div class="moimSubContent">
+		<table>
+			<thead>
+				<tr>
+					<td>글번호</td>
+					<td>글제목</td>
+					<td>글쓴이</td>
+					<td>날짜</td>
+					<td>조회수</td>
+				</tr>
+			</thead>
+			<tbody id="boardTable">
+			</tbody>
+		</table>
+		<div id="listControl">
+			<input type="button" id="prev" value="이전 페이지"/>
+			<input type="button" id="next" value="다음 페이지"/>
+			
+			<input type="text" id="search_form"/>
+			<input type="button" id="searchButton" value="검색"/>
+
+
+			<input type="button" id="write" value="글쓰기"/>
+		</div>
+	</div>
+</div>
+
+<script src="asset/board_list.js" type="text/javascript" charset="utf-8"></script>

@@ -1,0 +1,29 @@
+{
+	"MOIM_MEMBER" : [
+					{
+						"mem_id" : "1",
+						"mem_name" : "a",
+						"mem_phone": "02-123-1234",
+						"mem_password" : 100,
+						"mem_photo" : "a.jpg",
+						"mem_categoryid": "a"
+					},
+					{
+						"mem_id" : "2",
+						"mem_name" : "b",
+						"mem_phone": "02-234-1234",
+						"mem_password" : 110,
+						"mem_photo" : "b.jpg",
+						"mem_categoryid": "b"
+					},
+					{
+						"mem_id" : "3",
+						"mem_name" : "c",
+						"mem_phone": "02-345-1234",
+						"mem_password" : 111,
+						"mem_photo" : "c.jpg",
+						"mem_categoryid": "c"
+					}
+
+				]
+}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD SQL Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="letter">
+
+	<select id="selectPageletter" parameterClass="moim.letter.model.LetterPaging"
+			resultClass="moim.letter.model.Letter">
+			SELECT *
+			FROM ( SELECT ROWNUM AS MYROWNUM, ARTICLES.*
+				FROM (SELECT * FROM LETTER WHERE let_toMem = #letTomem# ORDER BY let_id) ARTICLES )
+			WHERE MYROWNUM BETWEEN #letStart# AND #letEnd#
+	</select>
+
+
+	<select id="selectNoread" parameterClass="String" resultClass="int">
+		SELECT count(*)
+		FROM LETTER
+		WHERE let_toMem = #letTomem# AND let_check='N'
+	</select>
+
+	<select id="selectLetter" parameterClass="moim.letter.model.Letter"
+		resultClass="moim.letter.model.Letter">
+		SELECT *
+		FROM LETTER
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="letTomem">
+				let_toMem = #letTomem#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="letId">
+				let_id = #letId#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+
+
+	<insert id="insertLetter" parameterClass="moim.letter.model.Letter">
+		INSERT INTO
+		LETTER
+		(	let_id,
+			let_title,
+			let_content,
+			let_check,
+			let_date,
+			let_toMem,
+			let_fromMemName,
+			mee_id
+		)
+			VALUES
+		(	NVL((SELECT MAX(LET_ID)+1 FROM LETTER),0),
+			#letTitle#,
+			#letContent#,
+			'N',
+			TO_CHAR(SYSDATE,'YYYYMMDD'),
+			#letTomem#,
+			#letFrommemname#,
+			#meeId#
+		)
+	</insert>
+
+
+	<delete id="deleteLetter" parameterClass="String">
+		DELETE
+		FROM LETTER
+		WHERE let_id = #letId#
+	</delete>
+
+	<update id="updateLetter" parameterClass="int">
+		UPDATE LETTER
+		SET let_check = 'Y'
+		WHERE let_id = #letId#
+	</update>
+
+</sqlMap>

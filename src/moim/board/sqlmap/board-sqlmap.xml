@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD SQL Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="board">
+
+	<insert id="insertBoard" parameterClass="moim.board.model.Board">
+		INSERT INTO
+			b_$meeId$(
+				BOA_NUM,
+				BOA_SUBJECT,
+				BOA_DATE,
+				BOA_CONTENT,
+				BOA_FILE,
+				MEM_ID,
+				MEE_ID,
+				BOA_CLICKNUM
+				)
+				VALUES (
+				NVL((SELECT MAX(BOA_NUM)+1 FROM b_$meeId$),0),
+				#boaSubject#,
+				TO_CHAR(SYSDATE,'YYYYMMDD'),
+				#boaContent#,
+				#boaFile#,
+				#memId#,
+				#meeId#,
+				0
+				)
+	</insert>
+
+	<delete id="deleteBoard" parameterClass="moim.board.model.Board">
+		DELETE
+		FROM b_$meeId$
+		WHERE boa_Num = #boaNum#
+	</delete>
+
+
+	<statement id="selectBoard" parameterClass="moim.board.model.BoardPaging"
+		resultClass="moim.board.model.Board">
+		SELECT *
+		FROM ( SELECT ROWNUM AS MYROWNUM, ARTICLES.*
+			FROM (SELECT B.*, M.MEM_NAME
+				FROM b_$meeId$ B,	MEMBER M
+				WHERE B.MEM_ID = M.MEM_ID
+				<dynamic>
+					<isNotEmpty prepend="and" property="boaText">
+						B.BOA_SUBJECT LIKE '%'||#boaText#||'%'
+					</isNotEmpty>
+					<isNotEmpty prepend="or" property="boaText">
+						B.BOA_CONTENT LIKE '%'||#boaText#||'%'
+					</isNotEmpty>
+				</dynamic>
+				ORDER BY B.BOA_NUM DESC
+				) ARTICLES )
+		WHERE MYROWNUM BETWEEN #boaStart# AND #boaEnd#
+
+	</statement>
+
+
+	<update id="updateBoard" parameterClass="moim.board.model.Board">
+		UPDATE
+			b_$meeId$
+		SET
+			BOA_SUBJECT = #boaSubject#,
+			BOA_DATE = TO_CHAR(SYSDATE,'YYYYMMDD'),
+			BOA_CONTENT = #boaContent#,
+			BOA_FILE = #boaFile#,
+			BOA_CLICKNUM = BOA_CLICKNUM+1
+		WHERE
+			BOA_NUM = #boaNum#
+	</update>
+
+	<update id="updateClicknum" parameterClass="moim.board.model.Board">
+		UPDATE b_$meeId$
+		SET
+			boa_Clicknum  = boa_Clicknum+1
+		WHERE
+			boa_Num = #boaNum#
+	</update>
+
+	<select id="selectBoardDetail" parameterClass="moim.board.model.Board"
+		resultClass="moim.board.model.Board">
+		SELECT B.*, M.MEM_NAME
+		FROM b_$meeId$ B, MEMBER M
+		WHERE boa_Num = #boaNum# AND B.MEM_ID = M.MEM_ID
+	</select>
+
+	<statement id="dropBoard" parameterClass="String">
+		DROP TABLE b_$meeId$
+	</statement>
+</sqlMap>
+

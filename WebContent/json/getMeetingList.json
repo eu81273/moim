@@ -1,0 +1,31 @@
+{
+	"MOIM_Meeting" : [
+						{
+						"mee_id" : "1",
+						"mee_name" : "a",
+						"mee_keyword":"a",
+						"mee_explain" : "A",
+						"mee_startdate" : "20120202",
+						"mee_enddate" : "20120203",
+						"mee_maxpeople" : 22,
+						"mee_joinpossible": 1,
+						"mee_photo" : "a.jpg",
+						"mee_categoryid" : 1,
+						"mee_plaid" : 1
+						},
+						{
+						"mee_id" : "2",
+						"mee_name" : "b",
+						"mee_keyword":"b",
+						"mee_explain" : "B",
+						"mee_startdate" : "20120205",
+						"mee_enddate" : "20120208",
+						"mee_maxpeople" : 33,
+						"mee_joinpossible": 0,
+						"mee_photo" : "b.jpg",
+						"mee_categoryid" : 2,
+						"mee_plaid" : 2
+						},
+
+				]
+}

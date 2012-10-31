@@ -1,0 +1,40 @@
+<div>
+	<div class="moimSubTitleContainer">
+		<img src="asset/moim_board.png" width="48" height="48"><span class="moimSubTitle"> 모임 게시판</span>
+	</div>
+	<div class="moimSubContent">
+		<div id="contentSection">
+			<label>글제목</label>
+			<span id="BoardDetailTitle"></span>
+			<label>글번호</label>
+			<span id="BoardDetailNum"></span><br>
+			<label>작성자</label>
+			<span id="BoardDetailMemName"></span>
+			<label>작성일</label>
+			<span id="BoardDetailDate"></span><br>
+			<div id="BoardDetailContent"></div>
+		</div>
+		<div id="articleControl">
+			<input type="button" id="list" value="목록"/>
+		</div>
+
+		<table>
+			<thead>
+				<tr>
+					<td>댓글번호</td>
+					<td>이름</td>
+					<td>내용</td>
+					<td>날짜</td>
+				</tr>
+			</thead>
+			<tbody id="commentTable">
+			</tbody>
+		</table>
+		<div id="commentControl">
+			<textarea id="commentContent"></textarea>
+			<input type="button" id="commentCommit" value="리플등록"/>
+		</div>
+	</div>
+</div>
+
+<script src="asset/board_read.js" type="text/javascript" charset="utf-8"></script>

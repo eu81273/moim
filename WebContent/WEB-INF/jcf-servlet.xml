@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:jcfsua="http://www.daewoobrenic.co.kr/schema/jcfsua"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd
+      http://www.springframework.org/schema/mvc
+      http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+      http://www.daewoobrenic.co.kr/schema/jcfsua
+      http://www.daewoobrenic.co.kr/schema/jcfsua/jcf-sua-1.0.xsd">
+
+	<!-- 자동 bean 등록 -->
+	<context:component-scan base-package="moim"></context:component-scan>
+
+	<jcfsua:sua-config auto-config="false">
+		<jcfsua:channel channel-type="JSON" />
+	</jcfsua:sua-config>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- one of the properties available; the maximum file size in bytes 2MB -->
+        <property name="maxUploadSize" value="20000000"/>
+    </bean>
+
+    <!-- Configure the file upload directory-->
+    <bean id="uploadDirResource" class="org.springframework.core.io.FileSystemResource">
+        <constructor-arg>
+        	<value>C:/JCF-IDE/workspace/moim/WebContent/uploaded_files/</value>
+        </constructor-arg>
+    </bean>
+</beans>

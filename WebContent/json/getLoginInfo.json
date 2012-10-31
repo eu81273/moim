@@ -1,0 +1,15 @@
+{
+	"MEMBER_MAP" : [
+					{
+						"mem_id" : "2",
+						"m_random" : "23",
+
+					},
+						{
+						"mem_id" : "1",
+						"m_random" : "12",
+
+					}
+
+				]
+}

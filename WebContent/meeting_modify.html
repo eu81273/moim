@@ -1,0 +1,72 @@
+<div>
+	<div class="moimSubTitleContainer">
+		<img src="asset/moim_modify.png" width="48" height="48"><span class="moimSubTitle"> 모임 수정</span>
+	</div>
+	<div class="moimSubContent">
+		<div>
+			<label>공개 여부</label>
+			<input type="radio" name="form_open" value="1" checked />공개 <input type="radio" name="form_open" value="0" />비공개
+		</div>
+		<div>
+			<label>모임 이름</label>
+			<input type="text" id="form_name" />
+		</div>
+		<div>
+			<label>모임 키워드</label>
+			<input type="text" id="form_keyword" />
+		</div>
+		<div class="textArea">
+			<label>모임 설명</label>
+			<textarea id="form_desicription"></textarea>
+		</div>
+		<div>
+			<form id="ajaxFileUpload" enctype="multipart/form-data">
+				<label>모임 사진</label>
+				<input type="file" name="fileData" id="form_file">
+			</form>
+		</div>
+		<div>
+			<label>카테고리</label>
+			<input type="radio" name="form_category" value="0"/>컴퓨터
+			<input type="radio" name="form_category" value="1"/>학문
+			<input type="radio" name="form_category" value="2"/>취미
+			<input type="radio" name="form_category" value="3"/>문화
+			<input type="radio" name="form_category" value="4"/>생활
+			<input type="radio" name="form_category" value="5"/>엔터테인먼트
+		</div>
+		<div>
+			<label>모임 인원</label>
+			<input type="text" id="form_limit" />
+		</div>
+		<div>
+			<label>모임 일자</label>
+			<input type="button" id="addButton" value="추가하기" />
+			<div id="selectedTimeSection">
+				<table>
+					<thead>
+						<tr>
+							<td>공간ID</td>
+							<td>공간명</td>
+							<td>날짜</td>
+							<td>시간</td>
+							<td>최대인원</td>
+						</tr>
+					</thead>
+					<tbody id="selctedTimeTable">
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- 여기에 시간 선택 부분 -->
+
+		<div id="timeSection">
+		</div>
+
+		<div class="finalButton">
+			<input id="submitButton" type="button" value="수정하기" />
+		</div>
+	</div>
+</div>
+
+<script src="asset/meeting_modify.js" type="text/javascript" charset="utf-8"></script>

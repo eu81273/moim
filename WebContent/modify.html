@@ -1,0 +1,48 @@
+<div id="warning" class="warningContainer">
+</div>
+<div class="formContainer">
+	<div class="formMainField">
+		회원정보수정
+	</div>
+	<div>
+		<label>이메일</label>
+		<input type="text" id="form_email" />
+	</div>
+	<div>
+		<label>패스워드</label>
+		<input type="password" id="form_password" />
+	</div>
+	<div>
+		<label>패스워드 확인</label>
+		<input type="password" id="form_password_check" />
+	</div>
+	<div>
+		<label>이름</label>
+		<input type="text" id="form_name" />
+	</div>
+	<div>
+		<label>핸드폰</label>
+		<input type="text" id="form_phone" />
+	</div>
+	<div>
+		<form id="ajaxFileUpload" enctype="multipart/form-data">
+			<label>회원사진</label>
+			<input type="file" name="fileData" id="form_file">
+		</form>
+	</div>
+	<div>
+		<label>관심 카테고리</label>
+	</div>
+	<div>
+		<input type="radio" name="form_category" value="0"/>컴퓨터
+		<input type="radio" name="form_category" value="1"/>학문　
+		<input type="radio" name="form_category" value="2"/>취미
+		<input type="radio" name="form_category" value="3"/>문화
+		<input type="radio" name="form_category" value="4"/>생활
+		<input type="radio" name="form_category" value="5"/>엔터테인먼트
+	</div>
+	<div class="formMainField">
+		<input id="submitButton" type="button" value="수정하기" />
+	</div>
+</div>
+<script src="asset/modify.js" type="text/javascript" charset="utf-8"></script>

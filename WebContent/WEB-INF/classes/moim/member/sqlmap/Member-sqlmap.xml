@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD SQL Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="member">
+
+
+	<select id="selectMember" parameterClass="moim.member.model.Member"
+		resultClass="moim.member.model.Member">
+		SELECT *
+		FROM MEMBER, CATEGORY
+		where MEMBER.MEM_CATEGORYID = CATEGORY.CAT_ID
+		<dynamic>
+			<isNotEmpty prepend="and" property="memEmail">
+				MEM_EMAIL = #memEmail#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="memName">
+				MEM_NAME = #memName#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<insert id="insertMember" parameterClass="moim.member.model.Member">
+		INSERT INTO MEMBER(MEM_ID, MEM_EMAIL,
+			MEM_NAME,MEM_PHONE,MEM_PASSWORD,MEM_PHOTO,MEM_CATEGORYID)
+				VALUES( NVL((SELECT MAX(MEM_ID)+1 FROM MEMBER),0),
+				#memEmail#,#memName#,#memPhone#,#memPassword#,#memPhoto#,#memCategoryid#)
+	</insert>
+
+	<update id="updateMember" parameterClass="moim.member.model.Member">
+		UPDATE MEMBER
+		SET MEM_NAME = #memName#,
+			MEM_PHONE = #memPhone#,
+			MEM_PASSWORD = #memPassword#,
+			MEM_PHOTO = #memPhoto#,
+			MEM_CATEGORYID = #memCategoryid#
+		WHERE MEM_ID = #memId#
+	</update>
+
+	<delete id="deleteMember" parameterClass="int">
+		DELETE
+		FROM MEMBER
+		WHERE MEM_ID = #memId#
+	</delete>
+
+	<select id="checkEmail" parameterClass="String">
+		SELECT count(*)
+		FROM MEMBER
+		WHERE MEM_EMAIL=#memEmail#
+	</select>
+
+	<select id="findEmail" parameterClass="moim.member.model.Member"
+		resultClass="moim.member.model.Member">
+		SELECT memEmail
+		FROM MEMBER
+		WHERE MEM_NAME = #memName# AND MEM_PHONE = #memPhone#
+	</select>
+
+	<update id="changePassword" parameterClass="moim.member.model.Member">
+		UPDATE MEMBER
+		SET MEM_PASSWORD = #memPassword#
+		WHERE MEM_EMAIL=#memEmail#
+	</update>
+
+	<select id="selectPageMember" parameterClass="moim.member.model.Memberpaging"
+			resultClass="moim.member.model.Member">
+			SELECT *
+			FROM ( SELECT ROWNUM AS MYROWNUM, ARTICLES.*
+				FROM (SELECT * FROM MEMBER
+				<dynamic prepend="where">
+					<isNotEmpty prepend="and" property="memEmail">
+						MEM_EMAIL = #memEmail#
+					</isNotEmpty>
+					<isNotEmpty prepend="and" property="memName">
+						MEM_NAME = #memName#
+					</isNotEmpty>
+					<isNotEmpty prepend="and" property="memCategoryid">
+						MEM_CATEGORYID = #memCategoryid#
+					</isNotEmpty>
+				</dynamic>
+				 ORDER BY mem_Id DESC) ARTICLES )
+			WHERE MYROWNUM BETWEEN #memStart# AND #memEnd#
+	</select>
+
+
+
+	<select id="selectMeetingMember" parameterClass="String"
+		resultClass="moim.member.model.Member">
+
+		SELECT  MY.MEMMEE_ADMIN , MEM.*
+		FROM MEMBERMEETING MY, MEMBER MEM
+		WHERE MEE_ID = #meeId# AND MY.MEM_ID = MEM.MEM_ID
+
+	</select>
+
+	<select id="getMyName" parameterClass="String"
+		resultClass="moim.member.model.Member">
+		SELECT MEM_NAME
+		FROM MEMBER
+		WHERE MEM_ID=#memId#
+	</select>
+
+</sqlMap>

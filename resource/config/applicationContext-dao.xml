@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jcfquery="http://www.daewoobrenic.co.kr/schema/jcfquery"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+						http://www.springframework.org/schema/jdbc
+						http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+						http://www.daewoobrenic.co.kr/schema/jcfquery
+						http://www.daewoobrenic.co.kr/schema/jcfquery/jcf-query-1.0.xsd">
+
+
+	<context:property-placeholder location="classpath:app.properties" />
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+
+	<!-- 교육용 <jdbc:embedded-database id="dataSource" type="HSQL"> <jdbc:script
+		location="classpath:db-script/hsql-test-script.sql"/> </jdbc:embedded-database> -->
+
+
+	<!-- ibatis를 설정하기 위한 설정 -->
+	<bean id="sqlMapClient" class="jcf.query.loader.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:sqlmap-config.xml"></property>
+		<property name="mappingLocations" value="classpath:**/sqlmap/*.xml"></property>
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+
+	<!-- jcfquery -->
+	<jcfquery:query-config id="queryExecutor"
+		datasource="dataSource" template-engine-type="IBATIS"
+		ibatis-sqlmap-client="sqlMapClient" />
+
+
+	<!-- spring설정에서 필요 -->
+	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+
+	<!-- transaction -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="serviceMethods" expression="execution(* *..*Service.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods" />
+	</aop:config>
+
+</beans>

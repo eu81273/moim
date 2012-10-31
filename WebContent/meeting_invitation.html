@@ -1,0 +1,57 @@
+<div>
+	<div class="moimSubTitleContainer">
+		<img src="asset/moim_invitation.png" width="48" height="48"><span class="moimSubTitle"> 모임 초대</span>
+	</div>
+	<div class="moimSubContent">
+		
+		<div>
+			<input type="button" id="prev" value="이전 페이지"/>
+			<input type="button" id="next" value="다음 페이지"/>
+		</div>
+
+		<div>
+			<table>
+				<thead>
+					<tr>
+						<td>등록번호</td>
+						<td>사진</td>
+						<td>이메일</td>
+						<td>이름</td>
+						<td>전화번호</td>
+						<td>카테고리</td>
+					</tr>
+				</thead>
+				<tbody id="memTable">
+				</tbody>
+			</table>
+		</div>
+
+
+		<div>
+			<label>검색항목</label>
+			<select id="modeSelect">
+				<option value="선택안함" selected>선택안함</option>
+				<option value="이름">이름</option>
+				<option value="이메일">이메일</option>
+			</select>
+
+			<input type="text" id="searchMember" disabled="disabled">
+			<input type="button" id="searchButton" value="검색" disabled="disabled">
+		</div>
+		<div>
+			<label>카테고리</label>
+			<select id="categorySelect">
+				<option value="선택안함" selected>선택안함</option>
+				<option value="0">컴퓨터</option>
+				<option value="1">학문</option>
+				<option value="2">취미</option>
+				<option value="3">문화</option>
+				<option value="4">생활</option>
+				<option value="5">엔터테인먼트</option>
+			</select>
+		<div>
+	</div>
+</div>
+
+
+<script src="asset/meeting_invitation.js" type="text/javascript" charset="utf-8"></script>

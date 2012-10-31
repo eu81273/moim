@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD SQL Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="comments">
+
+	<select id="selectComments" parameterClass="moim.comment.model.Comment"
+		resultClass="moim.comment.model.Comment">
+		SELECT R.*, M.MEM_NAME
+		FROM R_$meeId$ R, MEMBER M
+		WHERE R.BOA_NUM = #boaNum# AND R.MEM_ID = M.MEM_ID
+		ORDER BY COM_NUM
+	</select>
+
+	<delete id="deleteComments" parameterClass="moim.comment.model.Comment">
+		DELETE
+		FROM R_$meeId$
+		WHERE COM_NUM = #comNum#
+	</delete>
+
+
+	<update id="updateComments" parameterClass="moim.comment.model.Comment">
+		UPDATE R_$meeId$
+		SET COM_CONTENT = #comContent#,
+			COM_DATE = TO_CHAR(SYSDATE,'YYYYMMDD')
+		WHERE COM_NUM = #comNum#
+	</update>
+
+
+	<insert id="insertComments" parameterClass="moim.comment.model.Comment">
+		INSERT INTO
+		R_$meeId$(COM_NUM,
+			MEM_ID,
+			BOA_NUM,
+			COM_DATE,
+			COM_CONTENT
+		)
+		VALUES
+		(
+			NVL((SELECT MAX(COM_NUM)+1 FROM R_$meeId$),0),
+			#memId#,
+			#boaNum#,
+			TO_CHAR(SYSDATE,'YYYYMMDD'),
+			#comContent#
+		)
+	</insert>
+
+	<statement id="dropComments" parameterClass="String">
+		DROP TABLE R_$meeId$
+	</statement>
+
+</sqlMap>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD SQL Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="meeting">
+
+	<insert id="insertMeeting" parameterClass="moim.meeting.model.Meeting">
+
+		INSERT INTO
+			MEETING(
+				mee_Id,
+				mee_Name,
+				mee_Keyword,
+				mee_Explain,
+				mee_Open,
+				mee_Startdate,
+				mee_Maxpeople,
+				mee_Joinpossible,
+				mee_Photo,
+				mee_Categoryid,
+				mee_Currentpeople,
+				mee_Adminid
+				)
+				VALUES (
+				#meeId#,
+				#meeName#,
+				#meeKeyword#,
+				#meeExplain#,
+				#meeOpen#,
+				#meeStartdate#,
+				#meeMaxpeople#,
+				1,
+				#meePhoto#,
+				#meeCategoryid#,
+				1,
+				#meeAdminid#
+				)
+	</insert>
+
+	<insert id="insertMembermeeting" parameterClass="moim.meeting.model.Membermeeting">
+		INSERT INTO
+			MEMBERMEETING(
+				mem_Id,
+				mee_Id,
+				memmee_Admin
+				)
+				VALUES(
+				#memId#,
+				#meeId#,
+				#memmeeAdmin#
+				)
+	</insert>
+
+	<delete id="deleteMeeting" parameterClass="int">
+		DELETE
+		FROM MEETING
+		WHERE mee_Id = #meeId#
+	</delete>
+
+	<delete id="deleteMembermeeting" parameterClass="int">
+		DELETE
+		FROM MEMBERMEETING
+		WHERE mee_Id = #meeId#
+	</delete>
+
+	<update id="joinMeeting" parameterClass="moim.meeting.model.Meeting">
+		UPDATE MEETING
+		SET mee_currentpeople = mee_currentpeople +1
+		WHERE mee_Id = #meeId# AND mee_Currentpeople != mee_Maxpeople
+	</update>
+
+	<update id="withdrawMeeting" parameterClass="moim.meeting.model.Meeting">
+		UPDATE MEETING
+		SET mee_currentpeople = mee_Currentpeople -1
+		WHERE mee_Id = #meeId#
+	</update>
+
+	<delete id="withdrawMembermeeting" parameterClass="moim.meeting.model.Membermeeting">
+		DELETE
+		FROM MEMBERMEETING
+		WHERE mem_Id = #memId# AND mee_Id = #meeId#
+	</delete>
+
+	<statement id="selectMeeting" parameterClass="moim.meeting.model.Meeting"
+		resultClass="moim.meeting.model.Meeting">
+		SELECT *
+		FROM MEETING
+		<dynamic prepend = "where">
+			<isNotEmpty prepend="and" property="meeId">
+				MEE_ID = #meeId#
+			</isNotEmpty>
+		</dynamic>
+
+	</statement>
+
+	<select id="selectNameUsing" parameterClass="moim.meeting.model.MeetingPaging"
+		resultClass="moim.meeting.model.Meeting">
+		SELECT *
+			FROM ( SELECT ROWNUM AS MYROWNUM, ARTICLES.*
+				FROM (SELECT * FROM MEETING WHERE MEE_NAME LIKE '%'||#meeText#||'%') ARTICLES )
+			WHERE MYROWNUM BETWEEN #meeStart# AND #meeEnd#
+	</select>
+
+	<select id="selectKeywordUsing" parameterClass="moim.meeting.model.MeetingPaging"
+		resultClass="moim.meeting.model.Meeting">
+		SELECT *
+			FROM ( SELECT ROWNUM AS MYROWNUM, ARTICLES.*
+				FROM (SELECT * FROM MEETING WHERE MEE_KEYWORD LIKE '%'||#meeText#||'%') ARTICLES )
+			WHERE MYROWNUM BETWEEN #meeStart# AND #meeEnd#
+
+	</select>
+
+	<update id="updateMeeting" parameterClass="moim.meeting.model.Meeting">
+		UPDATE MEETING
+		SET
+			mee_Name = #meeName#,
+			mee_Keyword = #meeKeyword#,
+			mee_Explain = #meeExplain#,
+			mee_Open = #meeOpen#,
+			mee_Startdate = #meeStartdate#,
+			mee_Maxpeople =	#meeMaxpeople#,
+			mee_Photo =	#meePhoto#,
+			mee_Categoryid = #meeCategoryid#
+		WHERE
+			mee_Id = #meeId# AND #meeMaxpeople# >= mee_Currentpeople
+	</update>
+
+	<select id="selectMyMeeting" parameterClass="int" resultClass="moim.meeting.model.MyMeeting">
+		SELECT MEETING.MEE_ID, MEETING.MEE_NAME, MEETING.MEE_CURRENTPEOPLE, MEETING.MEE_MAXPEOPLE, NA.MEM_NAME
+		FROM MEETING ,
+			(SELECT MEE_ID, MEM_ID
+			FROM MEMBERMEETING
+			WHERE MEM_ID = #meeId#) MY,
+			(SELECT MEMBER.MEM_NAME, MEMBER.MEM_ID, ME.MEE_ID
+			FROM MEMBER, (SELECT MEM_ID, MEE_ID FROM MEMBERMEETING WHERE MEMMEE_ADMIN=1) ME
+			WHERE MEMBER.MEM_ID = ME.MEM_ID) NA
+		WHERE MEETING.MEE_ID = MY.MEE_ID AND NA.MEE_ID = MEETING.MEE_ID
+	</select>
+
+	<select id="selectPageMeeting" parameterClass="moim.meeting.model.MeetingPaging"
+			resultClass="moim.meeting.model.Meeting">
+			SELECT *
+			FROM ( SELECT ROWNUM AS MYROWNUM, ARTICLES.*
+				FROM (SELECT * FROM MEETING ORDER BY mee_Id DESC) ARTICLES )
+			WHERE MYROWNUM BETWEEN #meeStart# AND #meeEnd#
+	</select>
+
+
+	<select id="homeMeeting" parameterClass="moim.meeting.model.Meeting"
+			resultClass="moim.meeting.model.Meeting">
+			SELECT *
+			FROM (
+				SELECT *
+				FROM meeting
+				ORDER BY mee_id DESC
+			)
+			WHERE ROWNUM BETWEEN 0 AND 5
+	</select>
+
+	<select id="recommendMeeting" parameterClass="moim.meeting.model.Meeting"
+			resultClass="moim.meeting.model.Meeting">
+			SELECT *
+			FROM (SELECT *
+				  FROM meeting
+				  WHERE mee_maxpeople != mee_currentpeople AND mee_Categoryid = #meeCategoryid#
+				  ORDER BY dbms_random.value
+				  )
+		 	WHERE ROWNUM BETWEEN 0 AND 5
+		 	ORDER BY mee_id DESC
+	</select>
+
+	<select id="allPageMeeting" parameterClass="moim.meeting.model.MeetingPaging"
+			resultClass="moim.meeting.model.Meeting">
+			SELECT *
+			FROM ( SELECT ROWNUM AS MYROWNUM, ARTICLES.*
+				FROM (SELECT * FROM meeting WHERE mee_Categoryid = #meeCategoryid#
+					  ORDER BY mee_id DESC) ARTICLES )
+			WHERE MYROWNUM BETWEEN #meeStart# AND #meeEnd#
+
+	</select>
+
+	<select id="thisweekMeeting" parameterClass="moim.meeting.model.Meeting"
+			resultClass="moim.meeting.model.Meeting">
+			SELECT *
+			FROM MEETING
+			WHERE mee_startdate BETWEEN SYSDATE AND SYSDATE+7 AND mee_categoryid=#meeCategoryid#
+	</select>
+
+	<select id="selectMeeid" parameterClass="int">
+		SELECT MAX(MEE_ID) FROM MEEID
+	</select>
+
+	<insert id="insertMeeid" parameterClass="int">
+		INSERT INTO MEEID VALUES(#meeId#)
+	</insert>
+
+	<select id="selectMembermeeting" parameterClass="String"
+		resultClass="moim.meeting.model.Membermeeting">
+		SELECT ME.MEM_ID, MY.MEM_NAME
+		FROM MEMBERMEETING ME, MEMBER MY
+		WHERE MEE_ID=#meeId# AND ME.MEM_ID = MY.MEM_ID
+	</select>
+
+<!-- 게시판테이블 생성 쿼리만 -->
+	<insert id="createBoardTable" parameterClass="String">
+		CREATE TABLE B_$tableName$
+		(
+			BOA_NUM      NUMBER(8) PRIMARY KEY,
+			BOA_SUBJECT  VARCHAR2(30) ,
+			BOA_DATE     DATE,
+			BOA_CONTENT  VARCHAR2(300) ,
+			BOA_FILE     VARCHAR2(50),
+			MEM_ID       NUMBER(8),
+			MEE_ID       NUMBER(8),
+			BOA_CLICKNUM NUMBER(8)
+		)
+	</insert>
+
+<!-- 댓글테이블 생성 쿼리 -->
+	<insert id="createCommentsTable" parameterClass="String">
+		CREATE TABLE R_$tableName$
+		(
+			COM_NUM      NUMBER(8) PRIMARY KEY,
+			MEM_ID       NUMBER(8),
+			BOA_NUM      NUMBER(8),
+			COM_DATE     DATE,
+			COM_CONTENT  VARCHAR2(150)
+		)
+	</insert>
+
+<!--모임에 참여하는 멤버인지 select-->
+	<select id="selectIsMember" parameterClass="moim.meeting.model.Membermeeting"
+		resultClass="int">
+		SELECT count(*)
+		FROM MEMBERMEETING
+		WHERE MEE_ID=#meeId# AND MEM_ID=#memId#
+	</select>
+</sqlMap>

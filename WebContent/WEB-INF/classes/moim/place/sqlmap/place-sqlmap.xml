@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD SQL Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="place">
+
+	<insert id="insertPlace" parameterClass="moim.place.model.Place">
+		INSERT INTO
+			PLACE(
+				pla_Id,
+				pla_Name,
+				pla_Phone,
+				pla_Price,
+				pla_Addr,
+				pla_Photo,
+				pla_Max,
+				pla_Explain
+				)
+
+				VALUES (
+				NVL((SELECT MAX(pla_Id)+1 FROM PLACE),0),
+				#plaName#,
+				#plaPhone#,
+				#plaPrice#,
+				#plaAddr#,
+				#plaPhoto#,
+				#plaMax#,
+				#plaExplain#
+				)
+	</insert>
+
+	<delete id="deletePlace" parameterClass="int">
+		DELETE
+		FROM PLACE
+		WHERE pla_Id = #plaId#
+	</delete>
+
+
+	<statement id="selectPlace" parameterClass="moim.place.model.Place"
+		resultClass="moim.place.model.Place">
+
+		SELECT *
+		FROM PLACE
+	</statement>
+
+	<update id="updatePlace" parameterClass="moim.place.model.Place">
+		UPDATE
+			PLACE
+		SET
+			pla_Name = #plaName#,
+			pla_Phone = #plaPhone#,
+			pla_Price = #plaPrice#,
+			pla_Addr = #plaAddr#,
+			pla_Photo = #plaPhoto#,
+			pla_Max = #plaMax#,
+			pla_Explain = #plaExplain#
+		WHERE
+			pla_Id = #plaId#
+
+	</update>
+	<select id="selectPagePlace" parameterClass="moim.place.model.PlacePaging"
+			resultClass="moim.place.model.Place">
+			SELECT *
+			FROM ( SELECT ROWNUM AS MYROWNUM, ARTICLES.*
+				FROM (SELECT * FROM PLACE ORDER BY pla_Id DESC) ARTICLES )
+			WHERE MYROWNUM BETWEEN #plaStart# AND #plaEnd#
+	</select>
+
+	<select id="selectPlaceUsed" parameterClass="moim.place.model.PlaceUsed"
+		resultClass="moim.place.model.PlaceUsed">
+		SELECT *
+		FROM PLACEUSED
+		WHERE PLA_ID=#plaId# AND USED_DATE=#usedDate#
+	</select>
+
+	<select id="getCountPlaceUsed" parameterClass="String" resultClass="int">
+		SELECT COUNT(*)
+		FROM PLACEUSED
+		WHERE PLA_ID = #plaId#
+	</select>
+
+	<delete id="deletePlaceused" parameterClass="moim.place.model.PlaceUsed">
+		DELETE
+		FROM PLACEUSED
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="and" property="usedId">
+				USED_ID = #usedId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="meeId">
+				MEE_ID = #meeId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="plaId">
+				PLA_ID = #plaId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="usedDate">
+				USED_DATE = #usedDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="usedTime">
+				USED_TIME = #usedTime#
+			</isNotEmpty>
+		</dynamic>
+	</delete>
+
+	<insert id="insertPlaceUsed" parameterClass="moim.place.model.PlaceUsed">
+		INSERT INTO PLACEUSED(USED_ID,MEE_ID,PLA_ID,USED_DATE,USED_TIME)
+		VALUES(NVL((SELECT MAX(USED_ID)+1 FROM PLACEUSED),0),
+			#meeId#,#plaId#,#usedDate#,#usedTime#)
+	</insert>
+
+	<select id="selectPlan" parameterClass="int" resultClass="moim.place.model.PlaceUsed">
+		SELECT PLA.PLA_NAME, USED.USED_DATE, USED.USED_TIME, PLA.PLA_ID, PLA.PLA_MAX
+		FROM PLACEUSED USED, PLACE PLA
+		WHERE PLA.PLA_ID = USED.PLA_ID AND USED.MEE_ID=#meeId#
+	</select>
+
+
+</sqlMap>

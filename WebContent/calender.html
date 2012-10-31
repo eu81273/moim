@@ -1,0 +1,98 @@
+<html>
+   <head><title>달력</title>
+   </head>
+   <body>
+   <div id=d></div>
+   <SCRIPT LANGUAGE="JavaScript">
+ function numberOfDays(year, month) {
+  var days;
+  if ((month == 1) || (month == 3) || (month == 5) || (month == 7) || (month == 8) || (month == 10) || (month == 12)) days = 31;
+  else if ((month == 4) || (month == 6) || (month == 9) || (month == 11)) days = 30;
+  else if (month == 2) {   //윤년
+   if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) days = 29;
+   else days = 28;
+  }
+  return days;
+ }
+function showCalendar(year, month){
+ str="";
+   var firstDate = new Date(year, month-1, 1);
+   var firstDay = firstDate.getDay();
+   str+="<CENTER>";
+   str+="<h2>" + year + "년" + month + "월" + "</h2><p>";
+   str+="<TABLE>";
+   //요일
+   str+="<TR><TH BGCOLOR = 'red'>일 </TH>";
+   str+="<TH> 월 </TH><TH> 화 </TH>";
+   str+="<TH> 수 </TH><TH> 목 </TH>";
+   str+="<TH> 금 </TH><TH BGCOLOR = 'blue'> 토 </TH>";
+   //일주일
+   col = 0;
+   //빈공간
+   str+="<TR>";
+   for (i=0; i<firstDay; i++) {
+        str+="<TD> </TD>";
+        col++;
+   }
+   str+="<FORM>";
+ ed=numberOfDays(year, month);
+   for (i=1; i<=ed; i++) { //날짜
+        str+="<TD>";
+        if (i < 10)
+           str+="<INPUT TYPE='button' VALUE=" + "' " + i + "'>";
+        else
+    str+="<INPUT TYPE='button' VALUE=" + i + ">";
+        str+="</TD>";
+        col++;
+        if (col == 7) {   //새로운 행
+      str+="</TR>";
+     col = 0;
+ }
+    }
+    str+="</FORM>";
+    str+="</TABLE>";
+    str+="</CENTER>";
+ document.getElementById('d').innerHTML=str;
+    }
+</SCRIPT>
+ <center>
+ <SCRIPT LANGUAGE="JavaScript">
+     today = new Date();
+  Y=today.getYear();
+  M=today.getMonth()+1;
+           showCalendar(today.getYear(), today.getMonth() + 1);
+    document.write("<H3>" + today.toString() + "</H3><p>");
+
+ function cngCal(v1,v2){
+  if(v1==0){
+   Y=eval(Y+v2);
+  } else {
+   M=eval(M+v2);
+   if(M>12) {Y++;M=1;}
+   if(M<1) {Y--;M=12;}
+  }
+  showCalendar(Y, M);
+ }
+  </SCRIPT>
+연도변경  <input type="button" value="<" onclick=cngCal(0,-1)><input type="button" value=">" onclick=cngCal(0,1)> </br>
+월　변경   <input type="button" value="<" onclick=cngCal(1,-1)><input type="button" value=">" onclick=cngCal(1,1)>
+ </center>
+<div>
+		<input type="radio" name="form_category" value="0"/>09시~10시 <br>
+		<input type="radio" name="form_category" value="1"/>10시~11시 <br>
+		<input type="radio" name="form_category" value="2"/>11시~12시 <br>
+		<input type="radio" name="form_category" value="3"/>12시~13시 <br>
+		<input type="radio" name="form_category" value="4"/>13시~14시 <br>
+		<input type="radio" name="form_category" value="5"/>14시~15시 <br>
+		<input type="radio" name="form_category" value="5"/>15시~16시 <br>
+		<input type="radio" name="form_category" value="5"/>16시~17시 <br>
+		<input type="radio" name="form_category" value="5"/>17시~18시
+</div>
+
+<div>
+	<input id="submitButton" type="button" value="닫기" />
+</div>
+
+</body>
+
+</html>
